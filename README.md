@@ -21,8 +21,6 @@ The dataset used here was created from a synthetic proteomic and phosphoproteomi
 ### Other
 - Support Vector Regresion
   - Support Vector Regression was performed and the cost parameter was tuned to find the best model in the search space. This was implemented in parallel in R to help reduce computation time.
-### Results
-Tree-based methods such as Random Forest and Extreme Gradient Boosting created the most accurate models.
 #### References
 [1] Marx, H., Lemeer, S., Schliep, J.E., Matheron, L., Mohammed, S., Cox, J., Mann, M., Heck, A.J. and Kuster, B., 2013. A large synthetic peptide and phosphopeptide reference library for mass spectrometry–based proteomics. Nature biotechnology, 31(6), pp.557-564.
 
