@@ -26,3 +26,4 @@ The dataset used here was created from a synthetic proteomic and phosphoproteomi
 
 [2] James, G., Witten, D., Hastie, T. and Tibshirani, R., 2013. An introduction to statistical learning (Vol. 112, p. 18). New York: springer.
 
+[3] Dalpiaz, D., 2017. R for Statistical Learning.
