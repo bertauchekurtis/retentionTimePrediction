@@ -8,11 +8,11 @@ The dataset used here was created from a synthetic proteomic and phosphoproteomi
 - Stepwise Regression
    - A simple stepwise regression. (linearRegression.r)
 - Ridge Regression
-  - Penalized Regression method. (linearRegression.r)
+  - Penalized Regression method where coefficeints are scaled. In this method none of the coefficients can be forced to be zero. (linearRegression.r)
 - Lasso Regression
-  - Penalized Regression method. (linearRegression.r)
+  - Penalized Regression method where coefficients are scaled. In this method it is possible for some of the coefficients to be zero. (linearRegression.r)
 - Elastic Net Regression
-  - Penalized Regression method. (linearRegression.r)
+  - Penalized Regression method that combines parts of Ridge and Lasso regression. (linearRegression.r)
 ### Tree-Based Models
 - Random Forest
   - Tuning was performed to find best combination of number of variables and number of trees. Although a Random Forest model can be accurately assessed using Out of Bag Mean Square Error while training using the entire data set, the model was only trained with the training set to ensure comparability to other methods. (randomForest.r) The results of this tuning was visualized in a 3D plot, created in rfResults.r
