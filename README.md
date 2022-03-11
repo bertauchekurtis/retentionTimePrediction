@@ -1,26 +1,27 @@
 # retentionTimePrediction
 ### A collection of Machine Learning models for predicting the retention times of phosphorylated peptides
+### Abstract
+Accurately identifying protein post-translation modifications (PTMs) is important in studying cell biology
+and diseases. Current experiment techniques in studying proteins and identifying peptides generate
+massive amounts of data that can be extremely difficult to interpret and understand. However, it is
+possible to record additional information about the protein, besides its composition, during the experiment
+that can make it easier to accurately and correctly identify the protein. Specifically, the retention time of a
+peptide can be recorded. Combining this measurement and comparing it to a theoretical predicted value
+for the retention time can increase confidence in accurate identification.(Moruz et al., 2010) Therefore, it
+is vital that there are accurate methods for predicting the retention time. Here, we explore the viability of
+various types of models for predicting retention times for peptides with an emphasis on peptides with
+phosphorylation modifications.
 ### Data
 The dataset used here was created from a synthetic proteomic and phosphoproteomic dataset containing >100,000 peptides [1].
-### Linear-Based Models
-- Linear Regression
-    - A simple linear regression. (linearRegression.r)
-- Stepwise Regression
-   - A simple stepwise regression. (linearRegression.r)
-- Ridge Regression
-  - Penalized Regression method where coefficeints are scaled. In this method none of the coefficients can be forced to be zero. (linearRegression.r)
-- Lasso Regression
-  - Penalized Regression method where coefficients are scaled. In this method it is possible for some of the coefficients to be zero. (linearRegression.r)
-- Elastic Net Regression
-  - Penalized Regression method that combines parts of Ridge and Lasso regression. (linearRegression.r)
-### Tree-Based Models
+### Models
+- Multiple Linear Regression
+- Stepwise Linear Regression
+- Linear Regression with Lasso Penalty
+- Linear Regression with Ridge Penalty
+- Linear Regression with Lasso and Ridge Penalties
 - Random Forest
-  - Tuning was performed to find best combination of number of variables and number of trees. Although a Random Forest model can be accurately assessed using Out of Bag Mean Square Error while training using the entire data set, the model was only trained with the training set to ensure comparability to other methods. (randomForest.r) The results of this tuning was visualized in a 3D plot, created in rfResults.r
-- Extreme Gradient Boosting
-  - Tuning was performed to find best combination of hyperparameters in xgBoost.r After the first ~2600 models, the search space was narrowed by fixing subsample, eta, and depth, all of which remained constant for the 20 best models that had been produced up to that point. Tuning continued in xgBoostHypertuningReduced.r
-### Other
-- Support Vector Regresion
-  - Support Vector Regression was performed and the cost parameter was tuned to find the best model in the search space. This was implemented in parallel in R to help reduce computation time.
+- Extreme Gradient Boostin (XG Boost)
+- Support Vector Regression
 #### References
 [1] Marx, H., Lemeer, S., Schliep, J.E., Matheron, L., Mohammed, S., Cox, J., Mann, M., Heck, A.J. and Kuster, B., 2013. A large synthetic peptide and phosphopeptide reference library for mass spectrometry–based proteomics. Nature biotechnology, 31(6), pp.557-564.
 
