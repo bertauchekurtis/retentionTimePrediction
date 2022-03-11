@@ -1,4 +1,4 @@
-# retentionTimePrediction
+# Predicting Retention Times of PTM Peptides using Machine Learning Techniques
 ### A collection of Machine Learning models for predicting the retention times of phosphorylated peptides
 ### Abstract
 Accurately identifying protein post-translation modifications (PTMs) is important in studying cell biology
