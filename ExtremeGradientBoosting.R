@@ -1,6 +1,7 @@
 # kurtis bertauche
 # extreme gradient boosting
 
+data <- read.csv(file = "C:/Users/kbertauche/Downloads/RetentionTime_HCD_Marx2013_SuppT3.csv")
 data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
 set.seed(37) 
 library(stringr)
@@ -41,7 +42,7 @@ data$modM <- str_count(data$Peptide.Sequence2, "m")
 # remove non-numeric data
 data$Peptide.Sequence2 <- NULL
 
-# split data into trainng/testing sets
+# split data into training/testing sets
 setAssignments <- sample(1:2, size = nrow(data), prob = c(0.8, 0.2), replace = TRUE)
 trainingData <- data[setAssignments == 1,]
 testingData <- data[setAssignments == 2,]
@@ -52,6 +53,11 @@ trainingData$RetentionTime <- NULL
 
 # xg boost matrix creation
 trainingxgMatrix <- xgb.DMatrix(data.matrix(trainingData), label = trainingRetentionTimesLabels)
+
+# for testing
+testingDataLabels <- testingData$RetentionTime
+testingData$RetentionTime <- NULL
+testingxgMatrix <- xgb.DMatrix(data.matrix(testingData), label = testingDataLabels)
 
 # file to save results
 fileLabelsDF <- data.frame(gamma = numeric(),
@@ -64,8 +70,8 @@ fileLabelsDF <- data.frame(gamma = numeric(),
                            cv_rmse = numeric(),
                            std_deviation = numeric())
 #write.csv(fileLabelsDF, 
-#   file = "C:/Users/kbertauche/Downloads/reducedResults.csv",
-#   append = TRUE)
+ #  file = "C:/Users/kbertauche/Downloads/ExtremeGradientBoostingResults.csv",
+ #  append = TRUE)
 
 # a matrix to hold hyperparameter combinations
 matrixToTry <- matrix(,nrow=0,ncol=6)
@@ -73,22 +79,31 @@ for (gamma in c(0, 0.1, 0.2, 0.3, 0.4))
 {
   for (child_weight in c(1,2,3,4,5,6))
   {
-    for (col_subsample in c(0.6, 0.7, 0.8, 0.9))
+    for (col_subsample in c(0.8, 0.9, 1))
     {
+      for (max_depth in c(9, 10, 11))
+      {
+        for (subsample in c(0.8, 0.9, 1))
+          {
+            for (eta in c(0.01, 0.05, 0.08))
+            {
       matrixToTry <- rbind(matrixToTry,
                            c(gamma,child_weight,
-                             11, 0.9, col_subsample,
-                             0.05))
+                             max_depth, subsample, col_subsample,
+                             eta))
+            }
+        }
+      }
     }
   }
 }
 
 # tune the models
-for (row in 1:nrow(matrixToTry))
+for (row in 2431:nrow(matrixToTry))
 {
   set.seed(37)
   model <- xgb.cv(booster = "gbtree",
-                  objecgive = "reg:squarederror",
+                  objective = "reg:squarederror",
                   gamma = matrixToTry[row, 1],
                   child_weight = matrixToTry[row, 2],
                   max_depth = matrixToTry[row, 3],
@@ -120,10 +135,39 @@ for (row in 1:nrow(matrixToTry))
                         "cv_rmse",
                         "std_deviation")
   write.table(newResult,
-              file = "C:/Users/kbertauche/DownloadsreducedResults.csv",
+              file = "C:/Users/kbertauche/Downloads/ExtremeGradientBoostingResults.csv",
               append = TRUE,
               col.names = FALSE,
               sep = ",")
   rm(model)
 }
 
+# analyze things
+set.seed(37)
+bestModel <-xgboost(booster = "gbtree",
+                   objective = "reg:squarederror",
+                   gamma = 0.2,
+                   child_weight = 1,
+                   max_depth = 11,
+                   subsample = 0.9,
+                   col_subsample = 1,
+                   eta = 0.01,
+                   nrounds = 10000,
+                   nthreads = 28,
+                   print_every_n = 2500,
+                   early_stopping_rounds = 2,
+                   data = trainingxgMatrix)
+
+predictions <- predict(bestModel, testingxgMatrix)
+residual <- testingDataLabels - predictions
+print("RMSE:") # RMSE calculation
+sqrt(mean(((residual))^2))
+
+print("MAE:")# MAE calculation
+mean(abs(residual))
+
+# calculate 95% error window size
+q <- quantile(residual, probs =c(.025,.975))
+abs(q[1]) + abs(q[2]) # total length of window
+
+cor(testingDataLabels, predictions)
