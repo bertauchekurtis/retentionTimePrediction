@@ -22,3 +22,5 @@ phosphorylation modifications.
 - Extreme Gradient Boostin (XG Boost)
 - Support Vector Regression
 
+### Files
+All of the models and the way in which they were evaluated are contained in individual files. In adddition, the files used to create special data formats for various libraries are also contained in this repository. (For example, the format required for AutoRT and the PEPREC format required for DeepLC)
