@@ -2,10 +2,6 @@
 # 2 9 2022
 # ridge regression
 
-# kurtis bertauche
-# 2 7 2021
-# Simple Linear Regression
-
 data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
 set.seed(37) 
 library(caret)
@@ -98,7 +94,7 @@ cor(predictions, testingData$RetentionTime)
 predictions <- predict(bestModelOneSELambda, newx = Xtest)
 residuals <- testingData$RetentionTime - predictions
 
-# analysis for min lambda
+# analysis for lambda 1 SE
 print("RMSE:") # RMSE calculation
 sqrt(mean(((residuals))^2))
 
