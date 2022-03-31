@@ -99,7 +99,7 @@ for (gamma in c(0, 0.1, 0.2, 0.3, 0.4))
 }
 
 # tune the models
-for (row in 2431:nrow(matrixToTry))
+for (row in 1:nrow(matrixToTry))
 {
   set.seed(37)
   model <- xgb.cv(booster = "gbtree",
