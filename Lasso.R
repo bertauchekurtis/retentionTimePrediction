@@ -94,7 +94,7 @@ cor(predictions, testingData$RetentionTime)
 predictions <- predict(bestModelOneSELambda, newx = Xtest)
 residuals <- testingData$RetentionTime - predictions
 
-# analysis for min lambda
+# analysis for lambda 1 SE
 print("RMSE:") # RMSE calculation
 sqrt(mean(((residuals))^2))
 
