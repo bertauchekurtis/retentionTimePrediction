@@ -50,7 +50,7 @@ lm1 <- lm(RetentionTime
           +unmodG+unmodH+unmodI+unmodK+unmodL
           +unmodM+unmodN+unmodP+unmodQ+unmodR
           +unmodS+unmodT+unmodV+unmodW+unmodY
-          +modS+modT+modY+peptideLength+modM, data = trainingData)
+          +modS+modT+modY+modM, data = trainingData)
 
 # analysis
 summary(lm1)
