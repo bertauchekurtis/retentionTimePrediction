@@ -92,3 +92,20 @@ mae
 qs
 # all of the correlations
 cors
+
+min_index <- which.min(test_err_rmse) # select for model based on rmse
+
+# best model stats
+test_err_rmse[min_index]
+mae[min_index]
+qs[min_index]
+cors[min_index]
+
+coef(stepwiseModel, min_index)
+
+# create the best model to get p-values of coefficeints
+lmodel <- lm(trainingData$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
+            + unmodF + unmodG + unmodG + unmodH + unmodI + unmodK + unmodL +
+              + unmodM + unmodP + unmodR + unmodT + unmodV + unmodW + unmodY +
+              + modS + modY + modT + modM + peptideLength, data = trainingData)
+summary(lmodel)
