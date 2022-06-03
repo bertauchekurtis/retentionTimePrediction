@@ -2,7 +2,10 @@
 # 2 9 2021
 # Stepwise Linear Regression
 
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+ data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
+data$X <- NULL
+colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
 set.seed(37) 
 library(caret)
 library(stringr)
@@ -49,8 +52,8 @@ stepwiseModel <- regsubsets(RetentionTime ~unmodA+unmodC+unmodD+unmodE+unmodF+
                         unmodG+unmodH+unmodI+unmodK+unmodL+
                         unmodM+unmodN+unmodP+unmodQ+unmodR+
                         unmodS+unmodT+unmodV+unmodW+unmodY+
-                        modS+modY+modT+modM+
-                        peptideLength , data = trainingData, nvmax = 24, method = "exhaustive")
+                        modS+modY+modT+modM
+                         , data = trainingData, nvmax = 24, method = "exhaustive")
 stepwiseModelSum <- summary(stepwiseModel)
 
 coef(stepwiseModel, id = 1
@@ -103,9 +106,16 @@ cors[min_index]
 
 coef(stepwiseModel, min_index)
 
-# create the best model to get p-values of coefficeints
+# create the best model to get p-values of coefficeints (data 1)
 lmodel <- lm(trainingData$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
-            + unmodF + unmodG + unmodG + unmodH + unmodI + unmodK + unmodL +
-              + unmodM + unmodP + unmodR + unmodT + unmodV + unmodW + unmodY +
-              + modS + modY + modT + modM + peptideLength, data = trainingData)
+            + unmodF + unmodH + unmodI + unmodK + unmodL +
+              + unmodM +unmodN +  unmodP + unmodQ + unmodR +unmodS + unmodT + unmodV + unmodW + unmodY +
+              + modS + modY + modT + modM, data = trainingData)
 summary(lmodel)
+
+# creat the best model to get p-values of coefficeients (data 2)
+lmodel2 <- lm(trainingData$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
+             + unmodF + unmodG + unmodG + unmodH + unmodI + unmodK + unmodL +
+               + unmodM + unmodN + unmodP +unmodQ + unmodR + unmodS + unmodT + unmodV + unmodW + unmodY +
+               + modS + modY + modT + modM , data = trainingData)
+summary(lmodel2)

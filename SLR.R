@@ -2,7 +2,10 @@
 # 2 7 2021
 # Simple Linear Regression
 
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+# data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
+data$X <- NULL
+colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
 set.seed(37) 
 library(caret)
 library(stringr)

@@ -1,7 +1,11 @@
 # kurtis bertauche
 # random forest
 
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+
+# data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
+data$X <- NULL
+colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
 set.seed(37) 
 library(randomForest)
 library(stringr)
@@ -74,6 +78,11 @@ write.csv(fileLabelsDF,
           file = "C:/Users/kbertauche/Downloads/resultsRFFixed.csv",
           append = TRUE)
 
+# write the column names to the file (data 2)
+write.csv(fileLabelsDF,
+          file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/tuning2/rfResultsData2",
+          append = TRUE)
+
 # tune the model using OOB MSE on 80% of the dataset - keep 20% behind for testing (same as SLR split)
 for(row in 1:nrow(matrixToTry))
 {
@@ -106,8 +115,15 @@ for(row in 1:nrow(matrixToTry))
   names(newResult) <- c("numTrees",
                         "mtry",
                         "OOB_mse")
-  write.table(newResult, 
-              file = "C:/Users/kbertauche/Downloads/resultsRFFixed.csv",
+  #write.table(newResult, 
+  #            file = "C:/Users/kbertauche/Downloads/resultsRFFixed.csv",
+  #            append = TRUE,
+  #            col.names = FALSE,
+  #            sep = ",")
+  
+  # for data 2
+  write.table(newResult,
+              file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/rfResultsData2.csv",
               append = TRUE,
               col.names = FALSE,
               sep = ",")
