@@ -1,121 +1,113 @@
+# stepwise cross
 # kurtis bertauche
-# 2 9 2021
-# Stepwise Linear Regression
+# updated 9 june 2022
 
- data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
-data$X <- NULL
-colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
-set.seed(37) 
+dataOne_test <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_ONE.csv")
+dataOne_train <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_ONE.csv")
+dataTwo_test <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_TWO.csv")
+dataTwo_train <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_TWO.csv")
+
+set.seed(37)
 library(caret)
-library(stringr)
 library(leaps)
 
-# predictor variables
-data$peptideLength <- nchar(data$Peptide.Sequence2)
+stepwiseModel_one <- regsubsets(RetentionTime ~unmodA+unmodC+unmodD+unmodE+unmodF+
+                                  unmodG+unmodH+unmodI+unmodK+unmodL+
+                                  unmodM+unmodN+unmodP+unmodQ+unmodR+
+                                  unmodS+unmodT+unmodV+unmodW+unmodY+
+                                  modS+modY+modT+modM
+                                , data = dataOne_train, nvmax = 24, method = "exhaustive")
 
-data$unmodA <- str_count(data$Peptide.Sequence2, "A")
-data$unmodC <- str_count(data$Peptide.Sequence2, "C")
-data$unmodD <- str_count(data$Peptide.Sequence2, "D")
-data$unmodE <- str_count(data$Peptide.Sequence2, "E")
-data$unmodF <- str_count(data$Peptide.Sequence2, "F")
-
-data$unmodG <- str_count(data$Peptide.Sequence2, "G")
-data$unmodH <- str_count(data$Peptide.Sequence2, "H")
-data$unmodI <- str_count(data$Peptide.Sequence2, "I")
-data$unmodK <- str_count(data$Peptide.Sequence2, "K")
-data$unmodL <- str_count(data$Peptide.Sequence2, "L")
-
-data$unmodM <- str_count(data$Peptide.Sequence2, "M")
-data$unmodN <- str_count(data$Peptide.Sequence2, "N")
-data$unmodP <- str_count(data$Peptide.Sequence2, "P")
-data$unmodQ <- str_count(data$Peptide.Sequence2, "Q")
-data$unmodR <- str_count(data$Peptide.Sequence2, "R")
-
-data$unmodS <- str_count(data$Peptide.Sequence2, "S")
-data$unmodT <- str_count(data$Peptide.Sequence2, "T")
-data$unmodV <- str_count(data$Peptide.Sequence2, "V")
-data$unmodW <- str_count(data$Peptide.Sequence2, "W")
-data$unmodY <- str_count(data$Peptide.Sequence2, "Y")
-
-data$modS <- str_count(data$Peptide.Sequence2, "s")
-data$modT <- str_count(data$Peptide.Sequence2, "t")
-data$modY <- str_count(data$Peptide.Sequence2, "y")
-data$modM <- str_count(data$Peptide.Sequence2, "m")
-
-# split data into trainng/testing sets
-setAssignments <- sample(1:2, size = nrow(data), prob = c(0.8, 0.2), replace = TRUE)
-trainingData <- data[setAssignments == 1,]
-testingData <- data[setAssignments == 2,]
-
-stepwiseModel <- regsubsets(RetentionTime ~unmodA+unmodC+unmodD+unmodE+unmodF+
-                        unmodG+unmodH+unmodI+unmodK+unmodL+
-                        unmodM+unmodN+unmodP+unmodQ+unmodR+
-                        unmodS+unmodT+unmodV+unmodW+unmodY+
-                        modS+modY+modT+modM
-                         , data = trainingData, nvmax = 24, method = "exhaustive")
-stepwiseModelSum <- summary(stepwiseModel)
-
-coef(stepwiseModel, id = 1
-     )
-
-num_vars = ncol(trainingData) - 3
-trn_idx = sample(c(TRUE, FALSE), nrow(trainingData), replace = TRUE)
-tst_idx = (!trn_idx)
-
-test_mat = model.matrix(RetentionTime ~ unmodA+unmodC+unmodD+unmodE+unmodF+
-                       unmodG+unmodH+unmodI+unmodK+unmodL+
-                       unmodM+unmodN+unmodP+unmodQ+unmodR+
-                       unmodS+unmodT+unmodV+unmodW+unmodY+
-                       modS+modY+modT+modM+peptideLength, testingData)
+stepwiseModel_two <- regsubsets(RetentionTime ~unmodA+unmodC+unmodD+unmodE+unmodF+
+                                  unmodG+unmodH+unmodI+unmodK+unmodL+
+                                  unmodM+unmodN+unmodP+unmodQ+unmodR+
+                                  unmodS+unmodT+unmodV+unmodW+unmodY+
+                                  modS+modY+modT+modM
+                                , data = dataTwo_train, nvmax = 24, method = "exhaustive")
 
 
-coe <- coef(stepwiseModel, id = 1)
+stepwiseModelSum_one <- summary(stepwiseModel_one)
+stepwiseModelSum_two <- summary(stepwiseModel_two)
 
-test_err_rmse = rep(0, times = num_vars)
-mae = rep(0, times = num_vars)
-qs = rep(0, times = num_vars)
-cors = rep(0, times = num_vars)
-for (i in seq_along(test_err_rmse)) {
-  coefs = coef(stepwiseModel, id = i)
-  pred = test_mat[, names(coefs)] %*% coefs
-  test_err_rmse[i] <- sqrt(mean((testingData$RetentionTime - pred) ^ 2))
-  mae[i] <- mean(abs(testingData$RetentionTime - pred))
-  q <- quantile((testingData$RetentionTime-pred), probs =c(.025,.975))
-  qs[i] <- abs(q[1]) + abs(q[2]) # total length of window
-  cors[i] <- cor(pred, testingData$RetentionTime)
+num_vars_one = ncol(dataOne_train) - 3
+trn_idx_one = sample(c(TRUE, FALSE), nrow(dataOne_train), replace = TRUE)
+tst_idx_one = (!trn_idx_one)
+
+num_vars_two = ncol(dataTwo_train) - 3
+trn_idx_two = sample(c(TRUE, FALSE), nrow(dataTwo_train), replace = TRUE)
+tst_idx_two = (!trn_idx_two)
+
+test_mat_one = model.matrix(RetentionTime ~ unmodA+unmodC+unmodD+unmodE+unmodF+
+                              unmodG+unmodH+unmodI+unmodK+unmodL+
+                              unmodM+unmodN+unmodP+unmodQ+unmodR+
+                              unmodS+unmodT+unmodV+unmodW+unmodY+
+                              modS+modY+modT+modM, dataOne_test)
+
+test_mat_two = model.matrix(RetentionTime ~ unmodA+unmodC+unmodD+unmodE+unmodF+
+                              unmodG+unmodH+unmodI+unmodK+unmodL+
+                              unmodM+unmodN+unmodP+unmodQ+unmodR+
+                              unmodS+unmodT+unmodV+unmodW+unmodY+
+                              modS+modY+modT+modM, dataTwo_test)
+
+# FOR MODEL ONE
+test_err_rmse_one = rep(0, times = num_vars_one)
+mae_one = rep(0, times = num_vars_one)
+qs_one = rep(0, times = num_vars_one)
+cors_one = rep(0, times = num_vars_one)
+for (i in seq_along(test_err_rmse_one)) {
+  coefs = coef(stepwiseModel_one, id = i)
+  pred = test_mat_one[, names(coefs)] %*% coefs
+  test_err_rmse_one[i] <- sqrt(mean((dataOne_test$RetentionTime - pred) ^ 2))
+  mae_one[i] <- mean(abs(dataOne_test$RetentionTime - pred))
+  q <- quantile((dataOne_test$RetentionTime-pred), probs =c(.025,.975))
+  qs_one[i] <- abs(q[1]) + abs(q[2]) # total length of window
+  cors_one[i] <- cor(pred, dataOne_test$RetentionTime)
 }
 
+# FOR MODEL TWO
+test_err_rmse_two = rep(0, times = num_vars_two)
+mae_two = rep(0, times = num_vars_two)
+qs_two = rep(0, times = num_vars_two)
+cors_two = rep(0, times = num_vars_two)
+for (i in seq_along(test_err_rmse_two)) {
+  coefs = coef(stepwiseModel_two, id = i)
+  pred = test_mat_two[, names(coefs)] %*% coefs
+  test_err_rmse_two[i] <- sqrt(mean((dataTwo_test$RetentionTime - pred) ^ 2))
+  mae_two[i] <- mean(abs(dataTwo_test$RetentionTime - pred))
+  q <- quantile((dataTwo_test$RetentionTime-pred), probs =c(.025,.975))
+  qs_two[i] <- abs(q[1]) + abs(q[2]) # total length of window
+  cors_two[i] <- cor(pred, dataTwo_test$RetentionTime)
+}
 
-# all of the test RMSEs
-test_err_rmse
-# all of the test MAEs
-mae
-# all of the windows
-qs
-# all of the correlations
-cors
+# select best models using RMSE
+min_index_one <- which.min(test_err_rmse_one)
+min_index_two <- which.min(test_err_rmse_two)
 
-min_index <- which.min(test_err_rmse) # select for model based on rmse
+# best model stats (ONE)
+test_err_rmse_one[min_index_one]
+mae_one[min_index_one]
+qs_one[min_index_one]
+cors_one[min_index_one]
 
-# best model stats
-test_err_rmse[min_index]
-mae[min_index]
-qs[min_index]
-cors[min_index]
+# best model stats (TWO)
+test_err_rmse_two[min_index_two]
+mae_two[min_index_two]
+qs_two[min_index_two]
+cors_two[min_index_two]
 
-coef(stepwiseModel, min_index)
+# coefs
+coef(stepwiseModel_one, min_index_one)
+coef(stepwiseModel_two, min_index_two)
 
-# create the best model to get p-values of coefficeints (data 1)
-lmodel <- lm(trainingData$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
-            + unmodF + unmodH + unmodI + unmodK + unmodL +
-              + unmodM +unmodN +  unmodP + unmodQ + unmodR +unmodS + unmodT + unmodV + unmodW + unmodY +
-              + modS + modY + modT + modM, data = trainingData)
-summary(lmodel)
+# to get p-values
+lmodel_one <- lm(dataOne_train$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
+                 + unmodF + unmodH + unmodI + unmodK + unmodL +
+                   + unmodM +unmodN +  unmodP + unmodQ + unmodR +unmodS + unmodT + unmodV + unmodW + unmodY +
+                   + modS + modY + modT + modM, data = dataOne_train)
+summary(lmodel_one)
 
-# creat the best model to get p-values of coefficeients (data 2)
-lmodel2 <- lm(trainingData$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
-             + unmodF + unmodG + unmodG + unmodH + unmodI + unmodK + unmodL +
-               + unmodM + unmodN + unmodP +unmodQ + unmodR + unmodS + unmodT + unmodV + unmodW + unmodY +
-               + modS + modY + modT + modM , data = trainingData)
+lmodel2 <- lm(dataTwo_train$RetentionTime ~ unmodA + unmodC + unmodD + unmodE
+              + unmodF + unmodG + unmodH + unmodI + unmodK + unmodL +
+                + unmodM + unmodN + unmodP +unmodQ + unmodR + unmodS + unmodT + unmodV + unmodW + unmodY +
+                + modS + modY + modT + modM , data = dataTwo_train)
 summary(lmodel2)

@@ -2,6 +2,12 @@
 # support vector machine
 
 data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+
+# data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
+data$X <- NULL
+colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
+
 set.seed(37) 
 library(parallel)
 library(stringr)
@@ -76,7 +82,7 @@ parallelSVM = function(x)
   # collect results
   results <- data.frame("results" = c(x, model$results$RMSE))
   write.csv(results, 
-            file = paste("C:/Users/kbertauche/Downloads/SVMrun", x, ".csv",
+            file = paste("C:/Users/Kurtis/Desktop/retentionTimePrediction/tuning2/SVM/SVMrun", x, ".csv",
                          sep="",
                          collapse = NULL))
   model
@@ -107,4 +113,4 @@ bestModel <- train(RetentionTime ~
                      modS + modT + modY + modM + peptideLength, 
                    data = data, 
                    method = "svmLinear", 
-                   C = 0.01)
+                   cost = 0.01)

@@ -1,0 +1,17 @@
+Model	DataSet	Hyperparameters
+SLR	1	n/a
+SLR	2	n/a
+Stepwise	1	coefs = intercept + unmodA + unmodC + unmodD + unmodE + unmodF + unmodH + unmodI + unmodK + unmodL + unmodM + unmodN + unmodP + umodQ + unmodR + unmodS + unmodT + unmodV + unmodW + unmodY + modS + modY + modT + modM
+Stepwise	2	coefs = intercept + unmodA + unmodC + unmodD + unmodE + unmodF + unmodG + unmodH + unmodI + unmodK + unmodL + unmodM + unmodN + unmodP + unmodQ + unmodR + unmodS + unmodT + unmodV + unmodW + unmodY + modS + modY + modT + modM	
+Ridge	1	lambda.min = 0.5111337, lambda.1se = 1.075887
+Ridge	2	lambda.min = 2.25766, lambda.1se = 3.945325
+Lasso	1	?
+Lasso	2	?
+Elastic Net	1	?
+Elastic Net	2	?
+RF	1	?
+RF	2	?
+SVM	1	?
+SVM	2	?
+XGB	1	?
+XGB	2	?

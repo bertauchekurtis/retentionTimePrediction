@@ -1,6 +1,10 @@
 # kurtis bertauche
 # file maker for training/test splits
 
+data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
+data$X <- NULL
+colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
+
 data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
 set.seed(37) 
 library(stringr)
@@ -44,14 +48,14 @@ testingData <- data[setAssignments == 2,]
 
 # write to files
 write.table(trainingData, 
-            file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/trainingSet.csv", 
+            file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_ONE.csv", 
             row.names=FALSE, 
             quote = FALSE, 
             sep=",")
 
 # write to files
 write.table(testingData, 
-            file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/testingSet.csv", 
+            file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_ONE.csv", 
             row.names=FALSE, 
             quote = FALSE, 
             sep=",")

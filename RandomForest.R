@@ -140,7 +140,7 @@ set.seed(37)
 bestModel <- ranger(
   formula   = RetentionTime ~ ., 
   data      = trainingData, 
-  num.trees = 10000,
+  num.trees = 5000,
   mtry      = 14,
   min.node.size = 5,
   num.threads = 28)

@@ -14,10 +14,12 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import median_absolute_error
 from sklearn.metrics import r2_score
 
+
+
 random.seed(37)
 # importing data ==================================
-df = pd.read_csv("/Users/rileybrenner/Desktop/trainingSet.csv")
-df_test = pd.read_csv("/Users/rileybrenner/Desktop/testingSet.csv")
+df = pd.read_csv("C:/Users/Kurtis/Desktop/Research/RScripts/Updated/trainingSet_DATA_TWO.csv")
+df_test = pd.read_csv("C:/Users/Kurtis/Desktop/Research/RScripts/Updated/testingSet_DATA_TWO.csv")
 print("|==========> Data Loaded <==========|")
 # =================================================
 
@@ -70,9 +72,9 @@ collected_errors = y_vals_preidct - y_vals_test
 
 plt.hist(collected_errors)
 
-q1=np.quantile(residuals, 0.025)
+q1=np.quantile(collected_errors, 0.025)
 
-q2=np.quantile(residuals, 0.975)
+q2=np.quantile(collected_errors, 0.975)
 
 print("Lower Qunatile:", q1)
 print("Upper Quantile:", q2)

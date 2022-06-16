@@ -6,6 +6,11 @@ predict2 <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/A
 predict3 <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/AutoRT Results/predict3/predict3/test_evaluate.csv")
 predict4 <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/AutoRT Results/predict4/predict4/test_evaluate.csv")
 
+predict <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/AutoRT_data2/run1_results/test_evaluate.csv")
+predict2 <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/AutoRT_data2/run2_results/test_evaluate.csv")
+predict3 <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/AutoRT_data2/run3_results/test_evaluate.csv")
+predict4 <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/AutoRT_data2/run4_results/test_evaluate.csv")
+
 predictResiduals <- predict$y - predict$y_pred
 predict2Residuals <- predict2$y - predict2$y_pred
 predict3Residuals <- predict3$y - predict3$y_pred

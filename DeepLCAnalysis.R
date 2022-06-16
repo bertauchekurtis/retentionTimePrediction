@@ -1,9 +1,12 @@
 # results for DEEP LC
 # kurtis bertauche
 
-withCalibration <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_DEEPLC_PREDICTIONS_CALIBRATED.csv")
-noCalibration <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_DEEPLC_PREDICTIONS_NO_CALIBRATE.csv")
-useTR <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_DEEPLC_PREDICTIONS_USETR.csv")
+#withCalibration <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_DEEPLC_PREDICTIONS_CALIBRATED.csv")
+#noCalibration <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_DEEPLC_PREDICTIONS_NO_CALIBRATE.csv")
+#useTR <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_DEEPLC_PREDICTIONS_USETR.csv")
+
+withCalibration <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_testing_DATA_TWO_deeplc_predictions_calibration.csv")
+useTR <- read.csv(file = "C:/Users/Kurtis/Downloads/PEPREC_testing_DATA_TWO_deeplc_predictions_useTR.csv")
 
 # analysis for with calibration
 # RMSE calculation
