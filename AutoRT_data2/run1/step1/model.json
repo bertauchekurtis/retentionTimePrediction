@@ -1,0 +1,12 @@
+{
+  "dp_model": {
+    "0": "C:\\Users\\kurti\\Desktop\\UpdatedR\\AutoRT_data2\\run1/step1/model_0.h5"
+  },
+  "max_x_length": 60,
+  "aa": "C:\\Users\\kurti\\Desktop\\UpdatedR\\AutoRT_data2\\run1/step1/aa.tsv",
+  "rt_min": 0.0,
+  "rt_max": 242.45,
+  "scaling_method": "min_max",
+  "encode_method": "Embedding",
+  "add_reverse": 0
+}

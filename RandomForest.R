@@ -1,55 +1,20 @@
 # kurtis bertauche
 # random forest
 
+dataOne_test <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_ONE.csv")
+dataOne_train <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_ONE.csv")
+dataTwo_test <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_TWO.csv")
+dataTwo_train <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_TWO.csv")
 
-# data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
-data$X <- NULL
-colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
 set.seed(37) 
 library(randomForest)
 library(stringr)
 library(ranger)
 
-# predictor variables
-data$peptideLength <- nchar(data$Peptide.Sequence2)
-
-data$unmodA <- str_count(data$Peptide.Sequence2, "A")
-data$unmodC <- str_count(data$Peptide.Sequence2, "C")
-data$unmodD <- str_count(data$Peptide.Sequence2, "D")
-data$unmodE <- str_count(data$Peptide.Sequence2, "E")
-data$unmodF <- str_count(data$Peptide.Sequence2, "F")
-
-data$unmodG <- str_count(data$Peptide.Sequence2, "G")
-data$unmodH <- str_count(data$Peptide.Sequence2, "H")
-data$unmodI <- str_count(data$Peptide.Sequence2, "I")
-data$unmodK <- str_count(data$Peptide.Sequence2, "K")
-data$unmodL <- str_count(data$Peptide.Sequence2, "L")
-
-data$unmodM <- str_count(data$Peptide.Sequence2, "M")
-data$unmodN <- str_count(data$Peptide.Sequence2, "N")
-data$unmodP <- str_count(data$Peptide.Sequence2, "P")
-data$unmodQ <- str_count(data$Peptide.Sequence2, "Q")
-data$unmodR <- str_count(data$Peptide.Sequence2, "R")
-
-data$unmodS <- str_count(data$Peptide.Sequence2, "S")
-data$unmodT <- str_count(data$Peptide.Sequence2, "T")
-data$unmodV <- str_count(data$Peptide.Sequence2, "V")
-data$unmodW <- str_count(data$Peptide.Sequence2, "W")
-data$unmodY <- str_count(data$Peptide.Sequence2, "Y")
-
-data$modS <- str_count(data$Peptide.Sequence2, "s")
-data$modT <- str_count(data$Peptide.Sequence2, "t")
-data$modY <- str_count(data$Peptide.Sequence2, "y")
-data$modM <- str_count(data$Peptide.Sequence2, "m")
-
-# peptide sequence no longer needed
-data$Peptide.Sequence2 <- NULL
-
-# split data into trainng/testing sets
-setAssignments <- sample(1:2, size = nrow(data), prob = c(0.8, 0.2), replace = TRUE)
-trainingData <- data[setAssignments == 1,]
-testingData <- data[setAssignments == 2,]
+dataOne_test$Peptide.Sequence2 <- NULL
+dataOne_train$Peptide.Sequence2 <- NULL
+dataTwo_test$Peptide.Sequence2 <- NULL
+dataTwo_train$Peptide.Sequence2 <- NULL
 
 # create an empty matrix that will hold the parameter combinations for tuning
 matrixToTry <- matrix(,nrow=0,ncol=2)
@@ -64,63 +29,99 @@ for (numTrees in c(500, 750, 1000,2000, 3000, 5000, 10000))
 }
 
 # creating a data frame to store results of tuning
-resultdf <- data.frame(numTrees = numeric(),
+resultdf_one <- data.frame(numTrees = numeric(),
                        mtry = numeric(),
                        OOB_mse = numeric())
 
 # creating a file to write results to
-fileLabelsDF <- data.frame(numtrees = numeric(),
+fileLabelsDF_one <- data.frame(numtrees = numeric(),
                            mtry = numeric(),
                            OOB_mse = numeric())
 
+# creating a data frame to store results of tuning
+resultdf_two <- data.frame(numTrees = numeric(),
+                           mtry = numeric(),
+                           OOB_mse = numeric())
+
+# creating a file to write results to
+fileLabelsDF_two <- data.frame(numtrees = numeric(),
+                               mtry = numeric(),
+                               OOB_mse = numeric())
+
 # write the column names to the file
-write.csv(fileLabelsDF, 
+write.csv(fileLabelsDF_one, 
           file = "C:/Users/kbertauche/Downloads/resultsRFFixed.csv",
           append = TRUE)
 
 # write the column names to the file (data 2)
-write.csv(fileLabelsDF,
+write.csv(fileLabelsDF_two,
           file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/tuning2/rfResultsData2",
           append = TRUE)
 
-# tune the model using OOB MSE on 80% of the dataset - keep 20% behind for testing (same as SLR split)
+# tune first model
 for(row in 1:nrow(matrixToTry))
 {
   # for consistency, keep seed
   set.seed(37)
-  
   # rf model call
   rfModel <- ranger(
     formula   = RetentionTime ~ ., 
-    data      = trainingData, 
+    data      = dataOne_train, 
     num.trees = matrixToTry[row, 1],
     mtry      = matrixToTry[row, 2],
     min.node.size = 5,
     num.threads = 24
   )
-  
   print(rfModel)
-  
   # store model stats in data frame
   newResult <- data.frame(
     matrixToTry[row, 1],
     matrixToTry[row, 2],
     rfModel$prediction.error
   )
-  
   # clear model from memory
   rm(rfModel)
-  
   # write most recent model's stats to file
   names(newResult) <- c("numTrees",
                         "mtry",
                         "OOB_mse")
-  #write.table(newResult, 
-  #            file = "C:/Users/kbertauche/Downloads/resultsRFFixed.csv",
-  #            append = TRUE,
-  #            col.names = FALSE,
-  #            sep = ",")
+  # write to file
+  write.table(newResult,
+              file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/rfResultsData1.csv",
+              append = TRUE,
+              col.names = FALSE,
+              sep = ",")
   
+  # also keep most recent model's stats in enviornment
+  resultdf_one <- rbind(resultdf_one, newResult)
+}
+# model two
+for(row in 1:nrow(matrixToTry))
+{
+  # for consistency, keep seed
+  set.seed(37)
+  # rf model call
+  rfModel <- ranger(
+    formula   = RetentionTime ~ ., 
+    data      = dataTwo_train, 
+    num.trees = matrixToTry[row, 1],
+    mtry      = matrixToTry[row, 2],
+    min.node.size = 5,
+    num.threads = 24
+  )
+  print(rfModel)
+  # store model stats in data frame
+  newResult <- data.frame(
+    matrixToTry[row, 1],
+    matrixToTry[row, 2],
+    rfModel$prediction.error
+  )
+  # clear model from memory
+  rm(rfModel)
+  # write most recent model's stats to file
+  names(newResult) <- c("numTrees",
+                        "mtry",
+                        "OOB_mse")
   # for data 2
   write.table(newResult,
               file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/rfResultsData2.csv",
@@ -129,39 +130,55 @@ for(row in 1:nrow(matrixToTry))
               sep = ",")
   
   # also keep most recent model's stats in enviornment
-  resultdf <- rbind(resultdf, newResult)
+  resultdf_two <- rbind(resultdf_two, newResult)
 }
 
-# find stats of best model
-
-# keep same seed
 set.seed(37)
 # rebuild the model
-bestModel <- ranger(
+bestModel_one <- ranger(
   formula   = RetentionTime ~ ., 
-  data      = trainingData, 
+  data      = dataOne_train, 
+  num.trees = 10000,
+  mtry      = 14,
+  min.node.size = 5,
+  num.threads = 28)
+bestModel_one
+
+set.seed(37)
+# rebuild the model
+bestModel_two <- ranger(
+  formula   = RetentionTime ~ ., 
+  data      = dataTwo_train, 
   num.trees = 5000,
   mtry      = 14,
   min.node.size = 5,
   num.threads = 28)
-bestModel
+bestModel_two
 
-# calculate RMSE
-predictions <- predict(bestModel, testingData)
-residuals <- testingData$RetentionTime - predictions$predictions 
+calcStats = function(trueResponse, predictedResponse)
+{
+  residuals <- trueResponse - predictedResponse
+  # RMSE
+  rmse <- sqrt(mean(residuals ^ 2))
+  # mae
+  mae <- mean(abs(residuals))
+  # window
+  q <- quantile(residuals, probs =c(.025,.975))
+  window <- abs(q[1]) + abs(q[2])
+  # correlation
+  corr <- cor(predictedResponse, trueResponse)
+  # return vector
+  c(rmse, mae, window, corr)
+}
 
+predictions <- predict(bestModel_one, dataOne_test)
+calcStats(dataOne_test$RetentionTime, predictions)
 
-# analysis
-print("RMSE:") # RMSE calculation
-sqrt(mean(((residuals))^2))
+predictions <- predict(bestModel_one, dataTwo_test)
+calcStats(dataTwo_test$RetentionTime, predictions)
 
-print("MAE:")# MAE calculation
-mean(abs(residuals))
+predictions <- predict(bestModel_two, dataTwo_test)
+calcStats(dataTwo_test$RetentionTime, predictions)
 
-# calculate 95% error window size
-q <- quantile(residuals, probs =c(.025,.975))
-abs(q[1]) + abs(q[2]) # total length of window
-
-# correlation
-cor(predictions$predictions, testingData$RetentionTime)
-
+predictions <- predict(bestModel_two, dataOne_test)
+calcStats(dataOne_test$RetentionTime, predictions)

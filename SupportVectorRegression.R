@@ -1,12 +1,17 @@
 # kurtis bertauche
 # support vector machine
+# updated 21 june 2022
 
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
+dataOne_test <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_ONE.csv")
+dataOne_train <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_ONE.csv")
+dataTwo_test <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_TWO.csv")
+dataTwo_train <- read.csv(file = "C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_TWO.csv")
 
-# data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/data/RetentionTime_HCD_Marx2013_SuppT3.csv")
-data <- read.csv(file = "C:/Users/Kurtis/Desktop/Research/RScripts/Updated/dataSetTwoFiltered.csv")
-data$X <- NULL
-colnames(data) <- c("Peptide.Sequence2", "RetentionTime")
+dataOne_test$Peptide.Sequence2 <- NULL
+dataOne_train$Peptide.Sequence2 <- NULL
+dataTwo_test$Peptide.Sequence2 <- NULL
+dataTwo_train$Peptide.Sequence2 <- NULL
+
 
 set.seed(37) 
 library(parallel)
@@ -15,50 +20,10 @@ library(e1071)
 library(caret)
 library(kernlab)
 
-# predictor variables
-data$peptideLength <- nchar(data$Peptide.Sequence2)
-
-data$unmodA <- str_count(data$Peptide.Sequence2, "A")
-data$unmodC <- str_count(data$Peptide.Sequence2, "C")
-data$unmodD <- str_count(data$Peptide.Sequence2, "D")
-data$unmodE <- str_count(data$Peptide.Sequence2, "E")
-data$unmodF <- str_count(data$Peptide.Sequence2, "F")
-
-data$unmodG <- str_count(data$Peptide.Sequence2, "G")
-data$unmodH <- str_count(data$Peptide.Sequence2, "H")
-data$unmodI <- str_count(data$Peptide.Sequence2, "I")
-data$unmodK <- str_count(data$Peptide.Sequence2, "K")
-data$unmodL <- str_count(data$Peptide.Sequence2, "L")
-
-data$unmodM <- str_count(data$Peptide.Sequence2, "M")
-data$unmodN <- str_count(data$Peptide.Sequence2, "N")
-data$unmodP <- str_count(data$Peptide.Sequence2, "P")
-data$unmodQ <- str_count(data$Peptide.Sequence2, "Q")
-data$unmodR <- str_count(data$Peptide.Sequence2, "R")
-
-data$unmodS <- str_count(data$Peptide.Sequence2, "S")
-data$unmodT <- str_count(data$Peptide.Sequence2, "T")
-data$unmodV <- str_count(data$Peptide.Sequence2, "V")
-data$unmodW <- str_count(data$Peptide.Sequence2, "W")
-data$unmodY <- str_count(data$Peptide.Sequence2, "Y")
-
-data$modS <- str_count(data$Peptide.Sequence2, "s")
-data$modT <- str_count(data$Peptide.Sequence2, "t")
-data$modY <- str_count(data$Peptide.Sequence2, "y")
-data$modM <- str_count(data$Peptide.Sequence2, "m")
-
-# peptide sequence no longer needed
-data$Peptide.Sequence2 <- NULL
-
-# split data into trainng/testing sets
-setAssignments <- sample(1:2, size = nrow(data), prob = c(0.8, 0.2), replace = TRUE)
-trainingData <- data[setAssignments == 1,]
-testingData <- data[setAssignments == 2,]
-
 # search space for cost parameter
 valuesToTune = c(0.1, 0.5, 1, 02, 5, 10, 20)
 
-# function to build model (to be used in parallel)
+# FIRST DATA SET
 parallelSVM = function(x)
 {
   # set seed for consistency
@@ -74,7 +39,53 @@ parallelSVM = function(x)
                    unmodM + unmodN + unmodP + unmodQ + unmodR +
                    unmodS + unmodT + unmodV + unmodW + unmodY +
                    modS + modT + modY + modM + peptideLength, 
-                 data = trainingData, 
+                 data = dataOne_train, 
+                 method = "svmLinear", 
+                 trControl = train_control,  
+                 tuneGrid=data.frame(C=c(x)))
+  
+  # collect results
+  results <- data.frame("results" = c(x, model$results$RMSE))
+  write.csv(results, 
+            file = paste("C:/Users/Kurtis/Desktop/retentionTimePrediction/tuning/SVM/SVMrun", x, ".csv",
+                         sep="",
+                         collapse = NULL))
+  model
+}
+
+# run model in parallel
+cl <- makeCluster(7)
+clusterExport(cl, list( 
+  "trainControl",
+  "dataOne_train",
+  "valuesToTune",
+  "parallelSVM",
+  "train" 
+), 
+envir=environment())
+
+finalResults <- parSapply(cl = cl, 
+                          X = valuesToTune,
+                          FUN = parallelSVM)
+stopCluster(cl)
+
+# SECOND DATA SET
+parallelSVM = function(x)
+{
+  # set seed for consistency
+  set.seed(37)
+  
+  # set cross validation method
+  train_control <- trainControl(method="cv", number=5)
+  
+  # create the model
+  model <- train(RetentionTime ~
+                   unmodA + unmodC + unmodD + unmodE + unmodF +
+                   unmodG + unmodH + unmodI + unmodK + unmodL +
+                   unmodM + unmodN + unmodP + unmodQ + unmodR +
+                   unmodS + unmodT + unmodV + unmodW + unmodY +
+                   modS + modT + modY + modM + peptideLength, 
+                 data = dataTwo_train, 
                  method = "svmLinear", 
                  trControl = train_control,  
                  tuneGrid=data.frame(C=c(x)))
@@ -92,7 +103,7 @@ parallelSVM = function(x)
 cl <- makeCluster(7)
 clusterExport(cl, list( 
   "trainControl",
-  "trainingData",
+  "dataTwo_train",
   "valuesToTune",
   "parallelSVM",
   "train" 
@@ -104,13 +115,50 @@ finalResults <- parSapply(cl = cl,
                           FUN = parallelSVM)
 stopCluster(cl)
 
+
 # analysis (to be run after all models have been built and best model is known)
-bestModel <- train(RetentionTime ~
+bestModelOne <- train(RetentionTime ~
                      unmodA + unmodC + unmodD + unmodE + unmodF +
                      unmodG + unmodH + unmodI + unmodK + unmodL +
                      unmodM + unmodN + unmodP + unmodQ + unmodR +
                      unmodS + unmodT + unmodV + unmodW + unmodY +
                      modS + modT + modY + modM + peptideLength, 
-                   data = data, 
+                   data = dataOne_train, 
                    method = "svmLinear", 
-                   cost = 0.01)
+                   cost = 0.1)
+
+bestModelTwo <- train(RetentionTime ~
+                        unmodA + unmodC + unmodD + unmodE + unmodF +
+                        unmodG + unmodH + unmodI + unmodK + unmodL +
+                        unmodM + unmodN + unmodP + unmodQ + unmodR +
+                        unmodS + unmodT + unmodV + unmodW + unmodY +
+                        modS + modT + modY + modM + peptideLength, 
+                      data = dataTwo_train, 
+                      method = "svmLinear", 
+                      cost = 0.01)
+
+calcStats = function(trueResponse, predictedResponse)
+{
+  residuals <- trueResponse - predictedResponse
+  # RMSE
+  rmse <- sqrt(mean(residuals ^ 2))
+  # mae
+  mae <- mean(abs(residuals))
+  # window
+  q <- quantile(residuals, probs =c(.025,.975))
+  window <- abs(q[1]) + abs(q[2])
+  # correlation
+  corr <- cor(predictedResponse, trueResponse)
+  # return vector
+  c(rmse, mae, window, corr)
+}
+
+predicts_m1d1 <- predict(bestModelOne, dataOne_test)
+predicts_m1d2 <- predict(bestModelOne, dataTwo_test)
+predicts_m2d1 <- predict(bestModelTwo, dataOne_test)
+predicts_m2d2 <- predict(bestModelTwo, dataTwo_test)
+
+calcStats(dataOne_test$RetentionTime, predicts_m1d1)
+calcStats(dataOne_test$RetentionTime, predicts_m2d1)
+calcStats(dataTwo_test$RetentionTime, predicts_m1d2)
+calcStats(dataTwo_test$RetentionTime, predicts_m2d2)

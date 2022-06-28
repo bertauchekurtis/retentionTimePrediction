@@ -1,0 +1,21 @@
+{
+  "dp_model": {
+    "0": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_0.h5",
+    "1": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_1.h5",
+    "2": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_2.h5",
+    "3": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_3.h5",
+    "4": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_4.h5",
+    "5": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_5.h5",
+    "6": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_6.h5",
+    "7": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_7.h5",
+    "8": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_8.h5",
+    "9": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/model_9.h5"
+  },
+  "max_x_length": 60,
+  "aa": "C:\\Users\\kurti\\Desktop\\UpdatedR\\output2/aa.tsv",
+  "rt_min": 0.0,
+  "rt_max": 110.318,
+  "scaling_method": "min_max",
+  "encode_method": "Embedding",
+  "add_reverse": 0
+}

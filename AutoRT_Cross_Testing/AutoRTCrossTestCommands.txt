@@ -1,0 +1,38 @@
+#Testing Best Model from First Dataset with Second Data (Run #2)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\testing_DATA_TWO.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data1\output2\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_firstDataModel_testedWithSecondData/ -p test   
+
+================================================================
+#Testing Best Model from Second Dataset with First Data (Run #1)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\testing_DATA_ONE.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data2\run1\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_secondDataModel_testedWithFirstData/ -p test
+
+==================================================================================
+#Testing Best Transfer Learning Model from First Dataset with Second Data (Run #4)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\testing_DATA_TWO.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data1\output4\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_firstDataTransfer_testedWithSecondData/ -p test
+
+==================================================================================
+#Testing Best Transfer Learning Model from Second Dataset with First Data (Run #3)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\testing_DATA_ONE.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data2\run3\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_secondDataTransfer_testedwithFirstData/ -p test
+
+==============================================================================
+#Testing Training Data Best Model from First Dataset with Second Data (Run #2)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\trainingSet_DATA_TWO.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data1\output2\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_TRAINING_firstDataModel_testedWithSecondData/ -p test 
+
+==============================================================================
+#Testing Training Data Best Model from Second Dataset with First Data (Run #1)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\training_DATA_ONE.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data2\run1\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_TRAINING_secondDataModel_testedWithFirstData/ -p test
+
+==========================================================================================
+#Testing Training Best Transfer Learning Model from First Dataset with Second Data (Run #4)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\trainingSet_DATA_TWO.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data1\output4\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_TRAINING_firstDataTransfer_testedWithSecondData/ -p test
+
+===========================================================================================
+#Testing Training Best Transfer Learning Model from Second Dataset with First Data (Run #3)
+
+py autort.py predict -t C:\Users\Kurtis\Desktop\retentionTimePrediction\data\training_DATA_ONE.tsv -s C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_data2\run3\model.json -o C:\Users\Kurtis\Desktop\retentionTimePrediction\AutoRT_Cross_Testing\result_TRAINING_secondDataTransfer_testedWithFirstData/ -p test

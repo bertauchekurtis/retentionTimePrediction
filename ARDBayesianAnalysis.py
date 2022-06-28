@@ -18,8 +18,9 @@ from sklearn.metrics import r2_score
 
 random.seed(37)
 # importing data ==================================
-df = pd.read_csv("C:/Users/Kurtis/Desktop/Research/RScripts/Updated/trainingSet_DATA_TWO.csv")
-df_test = pd.read_csv("C:/Users/Kurtis/Desktop/Research/RScripts/Updated/testingSet_DATA_TWO.csv")
+df = pd.read_csv("C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_ONE.csv")
+df_test = pd.read_csv("C:/Users/Kurtis/Desktop/retentionTimePrediction/data/testingSet_withVars_DATA_TWO.csv")
+df_test_train = pd.read_csv("C:/Users/Kurtis/Desktop/retentionTimePrediction/data/trainingSet_withVars_DATA_TWO.csv")
 print("|==========> Data Loaded <==========|")
 # =================================================
 
@@ -34,7 +35,11 @@ data = df.drop(["RetentionTime", "Peptide.Sequence2"], axis = 1)
 
 RetTimeTest = df_test["RetentionTime"]
 data_test = df_test.drop(["RetentionTime", "Peptide.Sequence2"], axis = 1)
-print(data_test.head())
+
+
+RetTimeTest_two = df_test_train["RetentionTime"]
+data_test_two = df_test_train.drop(["RetentionTime", "Peptide.Sequence2"], axis = 1)
+
 
 y_vals = []
 for x in RetTime:
@@ -43,6 +48,10 @@ for x in RetTime:
 y_vals_test = []
 for x in RetTimeTest:
     y_vals_test.append(int(x))
+
+y_vals_test_train = []
+for x in RetTimeTest_two:
+    y_vals_test_train.append(int(x))
 
 print(data.shape)
 print(RetTime)
@@ -54,6 +63,27 @@ clf = linear_model.ARDRegression()
 clf.fit(data, y_vals)
 
 y_vals_preidct = clf.predict(data_test)
+y_vals_predict_two = clf.predict(data_test_two)
+
+np.savetxt('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train1_testPredict2.csv', y_vals_preidct, header = "y_pred", delimiter = ',')
+np.savetxt('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train1_trainPredict2.csv', y_vals_predict_two, header = "y_pred", delimiter = ',')
+
+#e numpy.savetxt(fname, array, delimiter=)
+#y_vals_preidct.to_csv('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train2_testPredict1.csv')
+#y_vals_predict_two.to_csv('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train2_trainPredict1.csv')
+
+#import csv
+#with open('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train2_testPredict1.csv', 'w') as f:
+    #y_vals_preidct.to_csv('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train2_testPredict1.csv')
+    #writer = csv.writer(f)
+    # write a row to the csv file
+    #writer.writerows(y_vals_preidct)
+#with open('C:/Users/Kurtis/Desktop/retentionTimePrediction/ARD/ARD_train2_trainPredict1.csv', 'w') as f:
+    #writer = csv.writer(f)
+    # write a row to the csv file
+    #writer.writerows(y_vals_predict_two)
+
+
 
 print("Score:", clf.score(data_test, y_vals_test))
 

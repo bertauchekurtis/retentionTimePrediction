@@ -18,13 +18,13 @@ trainingData <- data[setAssignments == 1,]
 testingData <- data[setAssignments == 2,]
 
 write.table(trainingData, 
-            file = "C:/Users/Kurtis/Downloads/trainingSet.tsv", 
+            file = "C:/Users/Kurtis/Downloads/training_DATA_ONE.tsv", 
             row.names=FALSE, 
             quote = FALSE, 
             sep="\t")
 
 write.table(testingData, 
-            file = "C:/Users/Kurtis/Downloads/testing.tsv", 
+            file = "C:/Users/Kurtis/Downloads/testing_DATA_ONE.tsv", 
             row.names=FALSE, 
             quote = FALSE, 
             sep="\t")

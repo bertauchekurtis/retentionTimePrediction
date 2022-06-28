@@ -1,0 +1,12 @@
+Run #1
+command:
+py autort.py train -e 100 -b 64 -m models\base_model\model.json -u m -i C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\trainingSet_DATA_TWO.tsv -sm min_max -rlr -n 20 -o C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\run1
+
+Run #2
+py autort.py train -e 40 -b 64 -m models\base_model\model.json -u m -i C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\trainingSet_DATA_TWO.tsv -sm min_max -rlr -n 20 -o C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\run2
+
+Run #3
+py autort.py train -i C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\trainingSet_DATA_TWO.tsv -o C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\run3 -e 100 -b 64 -u m -m models/ptm_base_model/phosphorylation_sty/model.json -rlr -n 20
+
+Run #4
+py autort.py train -i C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\trainingSet_DATA_TWO.tsv -o C:\Users\kurti\Desktop\UpdatedR\AutoRT_data2\run4 -e 40 -b 64 -u m -m models/ptm_base_model/phosphorylation_sty/model.json -rlr -n 10

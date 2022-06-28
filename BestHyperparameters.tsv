@@ -5,13 +5,17 @@ Stepwise	1	coefs = intercept + unmodA + unmodC + unmodD + unmodE + unmodF + unmo
 Stepwise	2	coefs = intercept + unmodA + unmodC + unmodD + unmodE + unmodF + unmodG + unmodH + unmodI + unmodK + unmodL + unmodM + unmodN + unmodP + unmodQ + unmodR + unmodS + unmodT + unmodV + unmodW + unmodY + modS + modY + modT + modM	
 Ridge	1	lambda.min = 0.5111337, lambda.1se = 1.075887
 Ridge	2	lambda.min = 2.25766, lambda.1se = 3.945325
-Lasso	1	?
-Lasso	2	?
-Elastic Net	1	?
-Elastic Net	2	?
-RF	1	?
-RF	2	?
-SVM	1	?
-SVM	2	?
-XGB	1	?
+Lasso	1	lambda.min = 0.0120857, lambda.1se = 0.1635253
+Lasso	2	lambda.min = 0.04038162, lambda.1se = 0.4133184
+Elastic Net	1	lambda = 0.01739136, alpha = 0.475
+Elastic Net	2	lambda = 0.03782381, alpha = 0.8875
+RF	1	num.trees = 10000, mtry = 14, min.node.size = 5
+RF	2	num.trees = 5000, mtry = 14, min.node.size = 14
+SVM	1	cost = 0.1, method = "svmLinear"
+SVM	2	cost = 0.1, method = "svmLinear"
+XGB	1	booster = "gbtree", objective = "reg:squarederror", gamma = 0.2, child_weight = 1, max_depth = 11, subsample = 0.9, col_subsample = 1, eta = 0.01, nrounds = 10000
 XGB	2	?
+AutoRT	1	Run # 2 (see AutoRT Commands)(epoch = 40)
+AutoRT	2	Run # 1 (see AutoRT Commands)(epoch = 100)
+AutoRT Transfer	1	Run # 4 (see AutoRT Commands)(epoch = 40)
+AutoRT Transfer	2	Run # 3 (see AutoRT Commands)(epoch = 100)
